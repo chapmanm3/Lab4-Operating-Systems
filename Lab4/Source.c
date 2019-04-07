@@ -42,6 +42,7 @@ int main() {
 		fscanf(fp, "%c", &temp);
 		proccess[count].service = (temp - '0');
 		fscanf(fp, "%c", &temp);
+		proccess[count].done = 0;
 		count++;
 	}
 
@@ -58,8 +59,25 @@ int main() {
 	printProcesses();
 
 	//Shortest Process Next
+	currentTime = 0;
+	int shortestProcess = 0;
+	while (processesDone() != 1) {
 
+		for (int i = 0; i < 5; i++) {
+			if ((proccess[i].arrive <= currentTime) && (proccess[i].service <= proccess[shortestProcess].service) && (proccess[i].done != 1))
+				shortestProcess = i;
+		}
+		proccess[shortestProcess].start = currentTime;
+		proccess[shortestProcess].wait = currentTime;
+		currentTime += proccess[shortestProcess].service;
+		proccess[shortestProcess].finish = currentTime;
+		proccess[shortestProcess].turnaround = proccess[shortestProcess].finish - proccess[shortestProcess].arrive;
+		proccess[shortestProcess].done = 1;
 
+	}
+
+	printf("\nShortest Process Next\n");
+	printProcesses();
 
 	return 0;
 }
